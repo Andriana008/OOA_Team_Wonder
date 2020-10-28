@@ -57,7 +57,7 @@ namespace TaskManager
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<ICategoryService, CategoryService>();
 
-            CreateRoles(services).Wait();
+            CreateRoles(services).GetAwaiter().GetResult();
             CreateCategories(services);
         }
 

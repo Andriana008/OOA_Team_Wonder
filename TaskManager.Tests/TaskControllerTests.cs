@@ -200,11 +200,6 @@ namespace TaskManager.Tests
             var repository = new Mock<TaskRepository>(context);
 
             var userRep = new Mock<UserRepository>(context);
-            var categoryRep = new Mock<CategoryRepository>(context);
-            var taskCategoriesRep = new Mock<TaskCategoryRepository>(context);
-
-            var userService = new Mock<UserService>(userRep.Object);
-
             var mapper = new Mock<IMapper>();
 
             var catRep = new Mock<CategoryRepository>(context);
