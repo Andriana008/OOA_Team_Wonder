@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Models.Account;
+using TaskManager.EmailService;
 using TaskManager.Models.AccountViewModels;
 
 namespace TaskManager.Controllers
@@ -20,18 +22,15 @@ namespace TaskManager.Controllers
         private readonly UserManager<UserProfile> _userManager;
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly ILogger _logger;
-        private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<UserProfile> userManager,
             SignInManager<UserProfile> signInManager,
-            ILogger<AccountController> logger,
-            IEmailSender emailSender)
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
         }
 
         [TempData]
@@ -137,7 +136,7 @@ namespace TaskManager.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.IndexAsync), "Home");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpGet]
@@ -163,9 +162,16 @@ namespace TaskManager.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
 
-                // TODO: replace with a call to new EmailManager gRPC service when it is ready
-                await _emailSender.SendEmailAsync(user.Email, "Password reset",
-                    "Click here to restore your password <a href=\"" + callbackUrl + "\">link</a>");
+                var channel = GrpcChannel.ForAddress("https://localhost:5001");
+                var client = new EmailManager.EmailManagerClient(channel);
+                var request = new SendEmailRequest
+                {
+                    Email = user.Email,
+                    Subject = "Password reset",
+                    Message = "Click here to restore your password <a href=\"" + callbackUrl + "\">link</a>"
+                };
+
+                await client.SendEmailAsync(request);
 
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
@@ -247,7 +253,7 @@ namespace TaskManager.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.IndexAsync), "Home");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
 
