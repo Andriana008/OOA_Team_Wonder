@@ -152,7 +152,7 @@ namespace TaskManager.Controllers
 
             return result.ToString().ToLowerInvariant();
         }
-        
+
         #endregion
     }
 }
