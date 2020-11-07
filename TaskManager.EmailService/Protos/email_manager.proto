@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "TaskManager.EmailService";
+
+package email_manager;
+
+// The EmailManager service definition.
+service EmailManager {
+  // Sends a email
+  rpc SendEmail (SendEmailRequest) returns (SendEmailReply);
+}
+
+message SendEmailRequest {
+  string name = 1;
+}
+
+message SendEmailReply {
+  string message = 1;
+}
