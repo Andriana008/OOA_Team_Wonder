@@ -10,10 +10,17 @@ service EmailManager {
   rpc SendEmail (SendEmailRequest) returns (SendEmailReply);
 }
 
+enum Status {
+    Ok    = 0;
+    Error = 1;
+}
+
 message SendEmailRequest {
-  string name = 1;
+  string email = 1;
+  string subject = 2;
+  string message = 3;
 }
 
 message SendEmailReply {
-  string message = 1;
+  Status status = 1;
 }

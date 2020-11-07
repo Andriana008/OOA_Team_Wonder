@@ -19,7 +19,7 @@ namespace TaskManager.EmailService
         {
             return Task.FromResult(new SendEmailReply
             {
-                Message = "Hello " + request.Name
+                Status = Status.Ok
             });
         }
     }
