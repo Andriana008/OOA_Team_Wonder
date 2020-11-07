@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using TaskManager.DAL.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using TaskManager.EmailService;
+using Grpc.Net.Client;
 
 namespace TaskManager.Controllers
 {
@@ -17,18 +18,15 @@ namespace TaskManager.Controllers
         private readonly ITaskService _taskService;
         private readonly IUserService _userService;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly IEmailSender _emailSender;
         private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
 
         public UserManagementController(UserManager<UserProfile> userManager,
                                         ITaskService taskService,
-                                        IUserService userService,
-                                        IEmailSender emailSender)
+                                        IUserService userService)
         {
             _taskService = taskService;
             _userService = userService;
             _userManager = userManager;
-            _emailSender = emailSender;
         }
 
         // GET: Users
@@ -117,17 +115,32 @@ namespace TaskManager.Controllers
 
             try
             {
+                var channel = GrpcChannel.ForAddress("https://localhost:5001");
+                var client = new EmailManager.EmailManagerClient(channel);
+
+                var request = new SendEmailRequest
+                {
+                    Email = user.Email,
+                };
+
                 if (isBanned && isAccountLocked)
                 {
-                    await _emailSender.SendEmailAsync(user.Email, "Account lock",
-                        "Your account has been locked due to not completing your tasks in time.");
-
+                    request.Subject = "Account lock";
+                    request.Message = "Your account has been locked due to not completing your tasks in time.";
                 }
                 else if (!isBanned && !isAccountLocked)
                 {
-                    await _emailSender.SendEmailAsync(user.Email, "Account unlock",
-                       "Your account has been unlocked!");
+                    request.Subject = "Account unlock";
+                    request.Message = "Your account has been unlocked!";
                 }
+                else
+                {
+                    return Json(ret);
+                }
+
+                var response = await client.SendEmailAsync(request);
+
+                ret = response.Status == EmailService.Status.Ok;
             }
             catch (Exception)
             {

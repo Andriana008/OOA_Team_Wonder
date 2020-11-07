@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace TaskManager.Extensions.Email
+namespace TaskManager.EmailService.Extensions.Email
 {
     public class EmailSender : IEmailSender
     {

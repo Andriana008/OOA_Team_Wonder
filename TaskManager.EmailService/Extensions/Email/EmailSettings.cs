@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TaskManager.Extensions.Email
+namespace TaskManager.EmailService.Extensions.Email
 {
     public class EmailSettings
     {

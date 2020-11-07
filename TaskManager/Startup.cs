@@ -18,7 +18,6 @@ using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DAL.Repositories;
-using TaskManager.Extensions.Email;
 
 namespace TaskManager
 {
@@ -44,11 +43,7 @@ namespace TaskManager
                 .AddDefaultTokenProviders();
 
             services.AddAutoMapper(typeof(Startup));
-
             services.AddMvc(option => option.EnableEndpointRouting = false);
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            services.AddTransient<IEmailSender, EmailSender>();
-
             services.AddScoped(typeof(IRepository<TaskItem>), typeof(TaskRepository));
             services.AddScoped(typeof(IRepository<UserProfile>), typeof(UserRepository));
             services.AddScoped(typeof(IRepository<CategoryItem>), typeof(CategoryRepository));
