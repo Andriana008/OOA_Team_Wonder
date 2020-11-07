@@ -16,7 +16,6 @@ using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Repositories;
 using TaskManager.DTO.Task;
-using TaskManager.Extensions.Email;
 using Xunit;
 using System.Threading.Tasks;
 using TaskManager.DAL.Models.Enums;
@@ -57,7 +56,7 @@ namespace TaskManager.Tests
                     new Mock<IServiceProvider>().Object,
                     new Mock<ILogger<UserManager<UserProfile>>>().Object);
 
-            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object, emailSender.Object);
+            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object);
 
             var view = controller.Users();
 
@@ -99,7 +98,7 @@ namespace TaskManager.Tests
                     new Mock<IServiceProvider>().Object,
                     new Mock<ILogger<UserManager<UserProfile>>>().Object);
 
-            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object, emailSender.Object);
+            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object);
 
             var view = controller.Ban("1");
 
@@ -141,7 +140,7 @@ namespace TaskManager.Tests
                     new Mock<IServiceProvider>().Object,
                     new Mock<ILogger<UserManager<UserProfile>>>().Object);
 
-            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object, emailSender.Object);
+            var controller = new UserManagementController(mockUserManager.Object, service.Object, userService.Object);
 
             var view = controller.Unban("1");
 
