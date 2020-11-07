@@ -8,6 +8,8 @@ using System.Linq;
 using TaskManager.DAL.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using TaskManager.EmailService;
+using Grpc.Net.Client;
 
 namespace TaskManager.Controllers
 {
@@ -117,17 +119,32 @@ namespace TaskManager.Controllers
 
             try
             {
+                var channel = GrpcChannel.ForAddress("https://localhost:5001");
+                var client = new EmailManager.EmailManagerClient(channel);
+
+                var request = new SendEmailRequest
+                {
+                    Email = user.Email,
+                };
+
                 if (isBanned && isAccountLocked)
                 {
-                    await _emailSender.SendEmailAsync(user.Email, "Account lock",
-                        "Your account has been locked due to not completing your tasks in time.");
-
+                    request.Subject = "Account lock";
+                    request.Message = "Your account has been locked due to not completing your tasks in time.";
                 }
                 else if (!isBanned && !isAccountLocked)
                 {
-                    await _emailSender.SendEmailAsync(user.Email, "Account unlock",
-                       "Your account has been unlocked!");
+                    request.Subject = "Account unlock";
+                    request.Message = "Your account has been unlocked!";
                 }
+                else
+                {
+                    return Json(ret);
+                }
+
+                var response = await client.SendEmailAsync(request);
+
+                ret = response.Status == EmailService.Status.Ok;
             }
             catch (Exception)
             {

@@ -137,7 +137,7 @@ namespace TaskManager.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(HomeController.IndexAsync), "Home");
         }
 
         [HttpGet]
@@ -163,6 +163,7 @@ namespace TaskManager.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
 
+                // TODO: replace with a call to new EmailManager gRPC service when it is ready
                 await _emailSender.SendEmailAsync(user.Email, "Password reset",
                     "Click here to restore your password <a href=\"" + callbackUrl + "\">link</a>");
 
@@ -246,7 +247,7 @@ namespace TaskManager.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(HomeController.IndexAsync), "Home");
             }
         }
 
