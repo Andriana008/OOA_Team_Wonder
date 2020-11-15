@@ -12,7 +12,7 @@ namespace TaskManager.Controllers
         public async Task<IActionResult> Index()
         {
             // Test gRPC connection
-            var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net");
+            var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net:5001");
             var client = new EmailManager.EmailManagerClient(channel);
             var request = new SendEmailRequest
             {
