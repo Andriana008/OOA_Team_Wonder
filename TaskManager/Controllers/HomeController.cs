@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManager.Models;
 using TaskManager.EmailService;
 using System.Threading.Tasks;
+using System;
 
 namespace TaskManager.Controllers
 {
@@ -12,7 +13,8 @@ namespace TaskManager.Controllers
         public async Task<IActionResult> Index()
         {
             // Test gRPC connection
-            var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net:5001");
+            //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net");
             var client = new EmailManager.EmailManagerClient(channel);
             var request = new SendEmailRequest
             {
