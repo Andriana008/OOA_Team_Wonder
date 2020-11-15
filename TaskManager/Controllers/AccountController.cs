@@ -162,7 +162,7 @@ namespace TaskManager.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
 
-                var channel = GrpcChannel.ForAddress("https://localhost:5001");
+                var channel = GrpcChannel.ForAddress("https://ooa-mvc.azurewebsites.net:5001");
                 var client = new EmailManager.EmailManagerClient(channel);
                 var request = new SendEmailRequest
                 {

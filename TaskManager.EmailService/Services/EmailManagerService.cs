@@ -24,7 +24,7 @@ namespace TaskManager.EmailService
             var status = Status.Ok;
             try
             {
-                _emailSender.SendEmailAsync(request.Email, request.Subject, request.Message);
+                //_emailSender.SendEmailAsync(request.Email, request.Subject, request.Message);
             }
             catch(Exception e)
             {
