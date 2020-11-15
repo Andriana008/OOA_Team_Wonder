@@ -115,7 +115,7 @@ namespace TaskManager.Controllers
 
             try
             {
-                var channel = GrpcChannel.ForAddress("https://ooa-mvc.azurewebsites.net:5001");
+                var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net:5001");
                 var client = new EmailManager.EmailManagerClient(channel);
 
                 var request = new SendEmailRequest

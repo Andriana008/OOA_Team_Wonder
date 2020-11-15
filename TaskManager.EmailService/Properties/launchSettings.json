@@ -3,7 +3,7 @@
     "TaskManager.EmailService": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "https://ooa-mvc.azurewebsites.net:5001",
+      "applicationUrl": "https://ooa-emailservice.azurewebsites.net:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging"
       }
