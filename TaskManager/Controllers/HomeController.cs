@@ -10,20 +10,8 @@ namespace TaskManager.Controllers
 {
     public class HomeController : Controller
     {
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            // Test gRPC connection
-            //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            var channel = GrpcChannel.ForAddress("https://ooa-emailservice.azurewebsites.net");
-            var client = new EmailManager.EmailManagerClient(channel);
-            var request = new SendEmailRequest
-            {
-                Email = "automemoservice@gmail.com",
-                Subject = "Title",
-                Message = "Test email"
-            };
-            await client.SendEmailAsync(request);
-
             return View();
         }
 
