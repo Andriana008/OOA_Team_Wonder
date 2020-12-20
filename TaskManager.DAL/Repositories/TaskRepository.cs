@@ -61,7 +61,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual TaskItem FindAsNoTracking(string id)
         {
-            return _context.Tasks
+            var item =  _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Include(c => c.Categories)
@@ -69,6 +69,8 @@ namespace TaskManager.DAL.Repositories
                 .Where(p => p.Id == id)
                 .AsNoTracking()
                 .SingleOrDefault();
+            _context.Entry(item).State = EntityState.Detached;
+            return item;
         }
 
         public virtual TaskItem Find(Func<TaskItem, bool> predicate)

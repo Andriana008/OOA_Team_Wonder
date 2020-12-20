@@ -6,6 +6,7 @@ namespace TaskManager.DAL.Models
 {
     public class TaskChanges
     {
+        [Key]
         public string Id { get; set; }
 
         [DataType(DataType.Date)]

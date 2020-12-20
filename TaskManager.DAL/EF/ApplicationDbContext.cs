@@ -56,6 +56,10 @@ namespace TaskManager.DAL.EF
             //builder.Entity<CategoryItem>()
             //    .HasOne(c => c.User);
 
+            builder.Entity<TaskChanges>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
             builder.Entity<CategoryItem>()
                 .HasMany(c => c.TaskCategories)
                 .WithOne(t => t.Category);
